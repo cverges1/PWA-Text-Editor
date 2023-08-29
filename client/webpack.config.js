@@ -3,6 +3,7 @@ const WebpackPwaManifest = require('webpack-pwa-manifest');
 const path = require('path');
 const { InjectManifest } = require('workbox-webpack-plugin');
 
+
 // TODO: Add and configure workbox plugins for a service worker and manifest file.
 // TODO: Add CSS loaders and babel to webpack.
 
@@ -22,24 +23,26 @@ module.exports = () => {
         template: './index.html',
         title: 'Text Editor'
       }),
-
-      new GenerateSW(),
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: 'src-sw.js',
+      }),
+      new WorkboxPlugin.GenerateSW(),
       new WebpackPwaManifest({
-        name: 'Text Editor',
+        name: 'Text Editor In Browser',
         short_name: 'Text Editor',
-        description: 'A text editor that runs in the browser.',
+        description: 'A PWA that functions as a text editor in the browser.',
         start_url: './',
         publicPath: './',
         icons: [
           {
-            src: path.resolve('assets/images/logo.png'),
+            src: path.resolve('src/images/logo.png'),
             sizes: [96, 128, 192, 256, 384, 512],
             destination: path.join('assets', 'icons'),
           },
         ],
       }),
     ],
-
     module: {
       rules: [
         {
